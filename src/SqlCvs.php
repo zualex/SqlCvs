@@ -41,6 +41,30 @@ class SqlCvs extends SqlCvsBase
         return $row;
     }
 
+    public function find($id)
+    {
+        $stmt = $this->PDO()->prepare("SELECT * FROM {$this->getTable()} WHERE id=:id");
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function update($id, $updates = [])
+    {
+        $query = "UPDATE {$this->getTable()} SET";
+        $values = [];
+
+        foreach ($updates as $name => $value) {
+            $query .= " {$name} = :{$name},";
+            $values[':'.$name] = $value;
+        }
+
+        $query = substr($query, 0, -1).';';
+        $stmt = $this->PDO()->prepare($query);
+
+        return $stmt->execute($values);
+    }
+
     /**
      * getDefaultFields
      * @return array

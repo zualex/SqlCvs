@@ -40,10 +40,10 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
     public function testUpdateRow()
     {
         $table = $this->sqlCvs->import('test_update', $this->file);
-        list($id, $string) = $table->getRandomRow();
+        $row = $table->getRandomRow();
 
-        $table->update($id, ['status' => 1]);
-        $find = $table->find($id);
+        $table->update($row['id'], ['status' => 1]);
+        $find = $table->find($row['id']);
 
         $this->assertEquals(1, $find['status']);
     }
