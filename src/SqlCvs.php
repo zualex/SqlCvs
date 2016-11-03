@@ -53,7 +53,7 @@ class SqlCvs extends SqlCvsBase
      */
     public function dropTable($tableName)
     {
-        $this->PDO()->exec("DROP TABLE {$tableName}");
+        $this->PDO()->exec("DROP TABLE IF EXISTS {$tableName}");
     }
 
     /**

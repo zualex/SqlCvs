@@ -22,8 +22,9 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
     public function testDropTable()
     {
         $table = $this->sqlCvs->import('test_drop', $this->file);
-        $this->sqlCvs->dropTable('test_drop');
+        $this->assertTrue($this->sqlCvs->isExistTable('test_drop'));
 
+        $this->sqlCvs->dropTable('test_drop');
         $this->assertFalse($this->sqlCvs->isExistTable('test_drop'));
     }
 

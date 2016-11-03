@@ -49,6 +49,21 @@ class SqlCvsBase
     }
 
     /**
+     * Check exists table
+     * @param  string  $tableName
+     * @return boolean
+     */
+    public function isExistTable($tableName) {
+        try {
+            $result = $this->PDO()->query("SELECT 1 FROM {$tableName} LIMIT 1");
+        } catch (\Exception $e) {
+            return FALSE;
+        }
+
+        return $result !== FALSE;
+    }
+
+    /**
      * Get count rows in table
      */
     public function count()
