@@ -31,10 +31,10 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
     public function testGetRandomRow()
     {
         $table = $this->sqlCvs->import('test_random', $this->file);
-        list($id, $string) = $table->getRandomRow();
+        $row = $table->getRandomRow();
 
-        $this->assertTrue(is_int($id));
-        $this->assertNotEquals(false, strpos($string, ';'));
+        $this->assertTrue(is_int($row['id']));
+        $this->assertNotEquals(false, strpos($row['value'], ';'));
     }
 
     public function testUpdateRow()
@@ -51,5 +51,7 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $this->sqlCvs->dropTable('test_import');
+        $this->sqlCvs->dropTable('test_random');
+        $this->sqlCvs->dropTable('test_update');
     }
 }
