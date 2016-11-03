@@ -1,0 +1,26 @@
+{
+    "name": "zualex/sqlcvs",
+    "description": "PHP class for working SQL and CVS",
+    "type": "library",
+    "keywords": ["SQL", "CVS", "import", "MySQL", "PostgreSQL", "SQLite"],
+    "homepage": "https://github.com/zualex/sqlcvs",
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Alexandr Zubarev",
+            "email": "i@zualex.com"
+        }
+    ],
+    "require" : {
+        "php": ">=5.4.0"
+    },
+    "require-dev" : {
+        "phpunit/phpunit": "5.5.*"
+    },
+    "autoload": {
+        "psr-4": {
+          "SqlCvs\\": "src/"
+        }
+    }
+}
