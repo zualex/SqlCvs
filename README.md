@@ -1,4 +1,10 @@
-<?php
+# SqlCvs
+
+PHP class for working SQL and CVS.
+
+## Exmaple
+
+```php
 require_once __DIR__ . '/vendor/autoload.php';
 
 use \SqlCvs\SqlCvs;
@@ -16,3 +22,4 @@ if (count($row)) {
     $sqlCvs->update($row['id'], ['status' => 1]);
     echo $row['value'];
 }
+```
