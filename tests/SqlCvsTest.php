@@ -4,7 +4,7 @@ use \SqlCvs\SqlCvs;
 class SqlCvsTest extends \PHPUnit_Framework_TestCase
 {
     private $dbName = 'test.db';
-    private $fileName = 'example.cvs';
+    private $file = 'tests/example.cvs';
     private $sqlCvs;
 
     protected function setUp()
@@ -14,14 +14,14 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
 
     public function testImportCvs()
     {
-        $table = $this->sqlCvs->importCvs('test_import', $this->fileName);
+        $table = $this->sqlCvs->import('test_import', $this->file);
 
-        $this->assertEquals(8, $table->count());
+        $this->assertEquals(7, $table->count());
     }
 
     public function testDropTable()
     {
-        $table = $this->sqlCvs->importCvs('test_drop', $this->fileName);
+        $table = $this->sqlCvs->import('test_drop', $this->file);
         $this->sqlCvs->dropTable('test_drop');
 
         $this->assertFalse($this->sqlCvs->isExistTable('test_drop'));
@@ -29,7 +29,7 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRandomRow()
     {
-        $table = $this->sqlCvs->importCvs('test_random', $this->fileName);
+        $table = $this->sqlCvs->import('test_random', $this->file);
         list($id, $string) = $table->getRandomRow();
 
         $this->assertTrue(is_int($id));
@@ -38,7 +38,7 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdateRow()
     {
-        $table = $this->sqlCvs->importCvs('test_update', $this->fileName);
+        $table = $this->sqlCvs->import('test_update', $this->file);
         list($id, $string) = $table->getRandomRow();
 
         $table->update($id, ['status' => 1]);
@@ -49,6 +49,6 @@ class SqlCvsTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        // TODO drop tables
+        $this->sqlCvs->dropTable('test_import');
     }
 }
