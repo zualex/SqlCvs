@@ -64,6 +64,19 @@ class SqlCvsBase
     }
 
     /**
+     * Find row
+     * @param  integer $id
+     * @return array
+     */
+    public function find($id)
+    {
+        $stmt = $this->PDO()->prepare("SELECT * FROM {$this->getTable()} WHERE id=:id");
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Get count rows in table
      */
     public function count()
@@ -75,28 +88,47 @@ class SqlCvsBase
     }
 
     /**
+     * Update by id
+     * @param  integer $id
+     * @param  array $updates
+     * @return boolean
+     */
+    public function update($id, $updates = [])
+    {
+        $query = "UPDATE {$this->getTable()} SET";
+
+        $values = [':id' => $id];
+        foreach ($updates as $name => $value) {
+            $query .= " {$name} = :{$name},";
+            $values[':'.$name] = $value;
+        }
+        $query = substr($query, 0, -1);
+        $query .= ' WHERE id=:id';
+
+        $stmt = $this->PDO()->prepare($query);
+
+        return $stmt->execute($values);
+    }
+
+    /**
+     * Drop table
+     * @param  string  $tableName
+     */
+    public function dropTable($tableName)
+    {
+        $this->PDO()->exec("DROP TABLE IF EXISTS {$tableName}");
+    }
+
+    /**
      * quoteArray
      * @param  array $list
      * @return array
      */
-    public function quoteArray($list = [])
+    protected function quoteArray($list = [])
     {
         return array_map(function($item) {
             return $this->PDO()->quote($item);
         }, $list);
-    }
-
-    /**
-     * Convert CVS file to array
-     * @param  string $fileName
-     * @param  string $delimiter
-     * @return array
-     */
-    public function cvsToArray($fileName, $delimiter = ';')
-    {
-        return array_map(function($line) use ($delimiter) {
-            return str_getcsv($line, $delimiter);
-        }, file($fileName));
     }
 
     /**

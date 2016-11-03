@@ -29,9 +29,13 @@ class SqlCvs extends SqlCvsBase
         return false;
     }
 
+    /**
+     * Get random row with id
+     * @return array
+     */
     public function getRandomRow()
     {
-        $result = $this->PDO()->query("SELECT * FROM {$this->getTable()} ORDER BY RANDOM() LIMIT 1");
+        $result = $this->PDO()->query("SELECT * FROM {$this->getTable()} ORDER BY RAND() LIMIT 1");
         $row = [];
         foreach ($result as $line) {
             $row['id'] = intval($line['id']);
@@ -39,43 +43,6 @@ class SqlCvs extends SqlCvsBase
         }
 
         return $row;
-    }
-
-    public function find($id)
-    {
-        $stmt = $this->PDO()->prepare("SELECT * FROM {$this->getTable()} WHERE id=:id");
-        $stmt->execute([':id' => $id]);
-
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
-    }
-
-    public function update($id, $updates = [])
-    {
-        $query = "UPDATE {$this->getTable()} SET";
-        $values = [];
-
-        foreach ($updates as $name => $value) {
-            $query .= " {$name} = :{$name},";
-            $values[':'.$name] = $value;
-        }
-
-        $query = substr($query, 0, -1).';';
-        $stmt = $this->PDO()->prepare($query);
-
-        return $stmt->execute($values);
-    }
-
-    /**
-     * getDefaultFields
-     * @return array
-     */
-    public function getDefaultFields()
-    {
-        return [
-            'id INTEGER PRIMARY KEY',
-            'status INTEGER DEFAULT 0',
-            'delimiter CHAR(1)',
-        ];
     }
 
     /**
@@ -112,12 +79,16 @@ class SqlCvs extends SqlCvsBase
     }
 
     /**
-     * Drop table
-     * @param  string  $tableName
+     * Convert CVS file to array
+     * @param  string $fileName
+     * @param  string $delimiter
+     * @return array
      */
-    public function dropTable($tableName)
+    public function cvsToArray($fileName, $delimiter = ';')
     {
-        $this->PDO()->exec("DROP TABLE IF EXISTS {$tableName}");
+        return array_map(function($line) use ($delimiter) {
+            return str_getcsv($line, $delimiter);
+        }, file($fileName));
     }
 
     /**
@@ -166,5 +137,18 @@ class SqlCvs extends SqlCvsBase
         }
 
         return $fields;
+    }
+
+    /**
+     * getDefaultFields
+     * @return array
+     */
+    private function getDefaultFields()
+    {
+        return [
+            'id INTEGER PRIMARY KEY AUTO_INCREMENT',
+            'status INTEGER DEFAULT 0',
+            'delimiter CHAR(1)',
+        ];
     }
 }

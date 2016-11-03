@@ -3,13 +3,12 @@ use \SqlCvs\SqlCvs;
 
 class SqlCvsTest extends \PHPUnit_Framework_TestCase
 {
-    private $dbName = 'test.db';
     private $file = 'tests/example.cvs';
     private $sqlCvs;
 
     protected function setUp()
     {
-        $this->sqlCvs = new SqlCvs('sqlite:' . $this->dbName);
+        $this->sqlCvs = new SqlCvs('mysql:dbname=test_db;host=127.0.0.1', 'root', '');
     }
 
     public function testImportCvs()
